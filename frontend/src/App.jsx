@@ -1,8 +1,70 @@
-function App(){
-  return(
-    <div>
-      <h1 className="text-red-500 bg-blue-500">Welcome Page</h1>
-    </div>
+import { Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Transactions from "./pages/Transactions";
+import Alerts from "./pages/Alerts";
+import Predictions from "./pages/Predictions";
+import Simulator from "./pages/Simulator";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+
+
+function App() {
+
+  return (
+
+    <Routes>
+
+      <Route
+        path="/"
+        element={<Login />}
+      />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/transactions"
+        element={
+          <ProtectedRoute>
+            <Transactions />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/alerts"
+        element={
+          <ProtectedRoute>
+            <Alerts />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/predictions"
+        element={
+          <ProtectedRoute>
+            <Predictions />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/simulator"
+        element={<Simulator />}
+      />
+
+    </Routes>
+
   );
 }
+
 export default App;

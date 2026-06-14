@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import HTTPException
 
 from sqlalchemy.orm import Session
 
@@ -26,3 +27,37 @@ def get_alerts(
         )
         .all()
     )
+
+
+@router.put("/alerts/{alert_id}")
+def update_alert_status(
+    alert_id: int,
+    status: str,
+    db: Session = Depends(get_db),
+    current_admin: str = Depends(
+        get_current_admin
+    )
+):
+
+    alert = (
+        db.query(Alert)
+        .filter(
+            Alert.alert_id == alert_id
+        )
+        .first()
+    )
+
+    if not alert:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Alert not found"
+        )
+
+    alert.alert_status = status
+
+    db.commit()
+
+    db.refresh(alert)
+
+    return alert
