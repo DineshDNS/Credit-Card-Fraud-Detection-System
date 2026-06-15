@@ -64,6 +64,17 @@ function Transactions() {
 
     fetchTransactions();
 
+    const interval =
+      setInterval(
+        fetchTransactions,
+        5000
+      );
+
+    return () =>
+      clearInterval(
+        interval
+      );
+
   }, [filter, page, search]);
 
   return (

@@ -132,6 +132,18 @@ const [recentAlerts, setRecentAlerts] =
 
     fetchDashboardData();
 
+    const interval =
+      setInterval(
+        fetchDashboardData,
+        5000
+      );
+
+    return () =>
+      clearInterval(
+        interval
+      );
+
+
   }, []);
 
   const pieData = [

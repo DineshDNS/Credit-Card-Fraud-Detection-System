@@ -25,6 +25,17 @@ function Alerts() {
 
     fetchAlerts();
 
+    const interval =
+      setInterval(
+        fetchAlerts,
+        5000
+      );
+
+    return () =>
+      clearInterval(
+        interval
+      );
+
   }, []);
 
   const fetchAlerts = async () => {

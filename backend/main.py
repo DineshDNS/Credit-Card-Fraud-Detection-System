@@ -8,7 +8,7 @@ from app.routes.dashboard import (
 from app.routes import upload
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import upload_history
-
+from app.routes import simulator
 app = FastAPI(
     title="Credit Card Fraud Detection API",
     version="1.0.0"
@@ -70,6 +70,11 @@ from app.routes.fraud_predictions import(router as fraud_predictions)
 
 app.include_router(
     fraud_predictions
+)
+
+app.include_router(
+    simulator.router,
+    tags=["Simulator"]
 )
 
 @app.get("/")

@@ -5,7 +5,8 @@ import {
   FaBrain,
   FaUpload,
   FaSignOutAlt,
-  FaShieldAlt
+  FaShieldAlt,
+   FaBolt
 } from "react-icons/fa";
 
 import {
@@ -63,6 +64,14 @@ function Sidebar() {
           >
             <FaUpload />
             Upload Transactions
+          </NavLink>
+
+          <NavLink
+            to="/simulator"
+            className={menuClass}
+          >
+            <FaBolt />
+            Live Simulator
           </NavLink>
 
           <NavLink

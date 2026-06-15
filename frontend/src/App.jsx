@@ -6,6 +6,7 @@ import Upload from "./pages/Upload";
 import Transactions from "./pages/Transactions";
 import Alerts from "./pages/Alerts";
 import Predictions from "./pages/Predictions";
+import Simulator from "./pages/Simulator";
 
 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -36,6 +37,15 @@ function App() {
         element={
           <ProtectedRoute>
             <Upload />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/simulator"
+        element={
+          <ProtectedRoute>
+            <Simulator />
           </ProtectedRoute>
         }
       />

@@ -29,6 +29,17 @@ function Predictions() {
 
     fetchPredictions();
 
+    const interval =
+      setInterval(
+        fetchPredictions,
+        5000
+      );
+
+    return () =>
+      clearInterval(
+        interval
+      );
+
   }, []);
 
   const fetchPredictions = async () => {

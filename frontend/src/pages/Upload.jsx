@@ -52,6 +52,18 @@ function Upload() {
 
     fetchHistory();
 
+    const interval =
+      setInterval(
+        fetchHistory,
+        5000
+      );
+
+    return () =>
+      clearInterval(
+        interval
+      );
+
+
   }, []);
 
   const handleUpload =
