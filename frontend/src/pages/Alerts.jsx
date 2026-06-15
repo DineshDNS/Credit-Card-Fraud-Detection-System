@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
 import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import PageContent from "../components/PageContent";
 
 import {
   FaSearch,
@@ -106,13 +108,9 @@ function Alerts() {
 
       <Sidebar />
 
-      <div className="ml-64 p-8">
+      <Header title="Fraud Alerts Center" />
 
-        <h1 className="text-4xl font-bold mb-8">
-
-          Fraud Alerts Center
-
-        </h1>
+      <PageContent>
 
         {
 
@@ -536,7 +534,7 @@ function Alerts() {
 
         }
 
-      </div>
+    </PageContent>
 
     </div>
 

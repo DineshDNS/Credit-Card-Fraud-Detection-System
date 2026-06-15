@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import api from "../api/api";
 import Sidebar from "../components/Sidebar";
 import StatCard from "../components/StatCard";
+import Header from "../components/Header";
+import PageContent from "../components/PageContent";
 
 import {
   PieChart,
@@ -18,6 +20,15 @@ import {
   LineChart,
   Line
 } from "recharts";
+
+import {
+  FaCreditCard,
+  FaExclamationTriangle,
+  FaPercentage,
+  FaShieldAlt,
+  FaBell,
+  FaEnvelope
+} from "react-icons/fa";
 
 function Dashboard() {
 
@@ -155,52 +166,52 @@ const [recentAlerts, setRecentAlerts] =
 
       <Sidebar />
 
-      <div className="ml-64 p-8">
+      <Header title="Credit Card Fraud Detection Dashboard" />
 
-        <h1 className="text-4xl font-bold mb-8">
-          Credit Card Fraud Detection Dashboard
-        </h1>
+      <PageContent>
 
-        {/* Stats Cards */}
-
-        <div className="grid md:grid-cols-3 xl:grid-cols-6 gap-6">
+        <div className="grid md:grid-cols-3 xl:grid-cols-3 gap-5">
 
           <StatCard
             title="Total Transactions"
-            value={
-              stats.total_transactions.toLocaleString()
-            }
+            value={stats.total_transactions}
+            icon={<FaCreditCard />}
+            color="bg-blue-600"
           />
 
           <StatCard
             title="Fraud Count"
             value={stats.fraud_count}
+            icon={<FaExclamationTriangle />}
+            color="bg-red-600"
           />
 
           <StatCard
             title="Fraud Rate (%)"
-            value={stats.fraud_rate}
+            value={`${stats.fraud_rate}%`}
+            icon={<FaPercentage />}
+            color="bg-orange-500"
           />
 
           <StatCard
-            title="High Risk"
-            value={
-              advancedStats.high_risk
-            }
+            title="High Risk Alerts"
+            value={advancedStats.high_risk}
+            icon={<FaShieldAlt />}
+            color="bg-red-700"
           />
 
           <StatCard
-            title="Medium Risk"
-            value={
-              advancedStats.medium_risk
-            }
+            title="Medium Risk Alerts"
+            value={advancedStats.medium_risk}
+            icon={<FaBell />}
+            color="bg-yellow-500"
           />
 
           <StatCard
-            title="Email Alerts"
-            value={
-              advancedStats.email_alerts
-            }
+            title="Email Alerts Sent"
+            value={advancedStats.email_alerts}
+            icon={<FaEnvelope />}
+            color="bg-green-600"
           />
 
         </div>
@@ -460,10 +471,9 @@ const [recentAlerts, setRecentAlerts] =
           </div>
 
         </div>
-      </div>
+        </PageContent>
 
-    </div>
-
+        </div>
   );
 }
 

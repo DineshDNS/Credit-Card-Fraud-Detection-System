@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
 import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import PageContent from "../components/PageContent";
 
 function Transactions() {
 
@@ -69,12 +71,9 @@ function Transactions() {
     <div className="bg-gray-100 min-h-screen">
 
       <Sidebar />
+      <Header title="Transactions" />
 
-      <div className="ml-64 p-8">
-
-        <h1 className="text-4xl font-bold mb-6">
-          Transactions
-        </h1>
+      <PageContent>
 
         <div className="mb-4 font-semibold">
           Total Records: {totalRecords}
@@ -330,7 +329,7 @@ function Transactions() {
 
         </div>
 
-      </div>
+      </PageContent>
 
     </div>
 
