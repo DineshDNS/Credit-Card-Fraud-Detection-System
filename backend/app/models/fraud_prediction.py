@@ -5,6 +5,7 @@ from sqlalchemy import Numeric
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy.sql import func
+from sqlalchemy import Text
 
 from app.database.base import Base
 
@@ -42,4 +43,9 @@ class FraudPrediction(Base):
     predicted_at = Column(
         DateTime,
         server_default=func.now()
+    )
+
+    explanation = Column(
+        Text,
+        nullable=True
     )

@@ -10,7 +10,8 @@ import {
   FaShieldAlt,
   FaChartLine,
   FaSearch,
-  FaTimes
+  FaTimes,
+  FaCheckCircle
 } from "react-icons/fa";
 
 function Predictions() {
@@ -614,104 +615,88 @@ function Predictions() {
 
                 </div>
 
-                <div
-                  className="
-                    mt-8
-                    bg-gray-100
-                    p-5
-                    rounded-lg
-                  "
-                >
 
-                  <h3
+                   <div
                     className="
-                      text-lg
-                      font-bold
-                      mb-3
+                      mt-8
+                      bg-red-50
+                      border
+                      border-red-200
+                      p-5
+                      rounded-lg
                     "
                   >
-                    Risk Analysis
-                  </h3>
 
-                  {
+                    <h3
+                      className="
+                        text-lg
+                        font-bold
+                        text-red-700
+                        mb-4
+                      "
+                    >
+                      Explainable AI Analysis
+                    </h3>
 
-                    selectedPrediction.risk_level ===
-                    "High"
+                    {
 
-                    ? (
+                      selectedPrediction.explanation
 
-                      <ul
-                        className="
-                          list-disc
-                          ml-5
-                          text-red-600
-                        "
-                      >
+                      ? (
 
-                        <li>
-                          High Value Transaction
-                        </li>
+                        JSON.parse(
+                          selectedPrediction.explanation
+                        ).map(
+                          (
+                            reason,
+                            index
+                          ) => (
 
-                        <li>
-                          Potential Fraud Pattern
-                        </li>
+                            <div
+                              key={index}
+                              className="
+                                flex
+                                items-center
+                                gap-3
+                                mb-3
+                              "
+                            >
 
-                        <li>
-                          Immediate Review Required
-                        </li>
+                              <FaCheckCircle
+                                className="
+                                  text-red-600
+                                "
+                              />
 
-                      </ul>
+                              <span
+                                className="
+                                  font-medium
+                                  text-gray-700
+                                "
+                              >
+                                {reason}
+                              </span>
 
-                    )
+                            </div>
 
-                    : selectedPrediction.risk_level ===
-                      "Medium"
+                          )
+                        )
 
-                    ? (
+                      )
 
-                      <ul
-                        className="
-                          list-disc
-                          ml-5
-                          text-orange-600
-                        "
-                      >
+                      : (
 
-                        <li>
-                          Suspicious Activity
-                        </li>
+                        <div
+                          className="
+                            text-gray-500
+                          "
+                        >
+                          No explanation available
+                        </div>
 
-                        <li>
-                          Monitor User Behaviour
-                        </li>
+                      )
 
-                      </ul>
-
-                    )
-
-                    : (
-
-                      <ul
-                        className="
-                          list-disc
-                          ml-5
-                          text-green-600
-                        "
-                      >
-
-                        <li>
-                          Normal Transaction
-                        </li>
-
-                        <li>
-                          No Significant Risk
-                        </li>
-
-                      </ul>
-
-                    )
-
-                  }
+                    }
 
                 </div>
 
