@@ -2,79 +2,277 @@ import { useEffect, useState } from "react";
 import api from "../api/api";
 import Sidebar from "../components/Sidebar";
 
+import {
+  FaBrain,
+  FaExclamationTriangle,
+  FaShieldAlt,
+  FaChartLine,
+  FaSearch,
+  FaTimes
+} from "react-icons/fa";
+
 function Predictions() {
 
   const [predictions, setPredictions] =
     useState([]);
 
+  const [search, setSearch] =
+    useState("");
+
+  const [selectedPrediction, setSelectedPrediction] =
+    useState(null);
+
   useEffect(() => {
-
-    const fetchPredictions = async () => {
-
-      try {
-
-        const response =
-          await api.get("/fraud-predictions");
-
-        setPredictions(
-          response.data || []
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Error fetching predictions:",
-          error
-        );
-
-        setPredictions([]);
-      }
-    };
 
     fetchPredictions();
 
   }, []);
 
+  const fetchPredictions = async () => {
+
+    try {
+
+      const response =
+        await api.get(
+          "/fraud-predictions"
+        );
+
+      setPredictions(
+        response.data || []
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error fetching predictions:",
+        error
+      );
+
+      setPredictions([]);
+
+    }
+
+  };
+
+  const filteredPredictions =
+
+    predictions.filter(
+      (prediction) =>
+
+        prediction.transaction_id
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+    );
+
+  const fraudCount =
+
+    predictions.filter(
+      (prediction) =>
+        prediction.prediction ===
+        "Fraud"
+    ).length;
+
+  const genuineCount =
+
+    predictions.filter(
+      (prediction) =>
+        prediction.prediction ===
+        "Legitimate"
+    ).length;
+
+  const highRiskCount =
+
+    predictions.filter(
+      (prediction) =>
+        prediction.risk_level ===
+        "High"
+    ).length;
+
   return (
-    <div className="flex">
+
+    <div className="bg-gray-100 min-h-screen">
 
       <Sidebar />
 
-      <div className="flex-1 p-8 bg-gray-100 min-h-screen">
+      <div className="ml-64 p-8">
 
-        <h1 className="text-4xl font-bold mb-6">
-          Predictions
+        <h1 className="text-4xl font-bold mb-8">
+
+          Prediction Intelligence Center
+
         </h1>
 
-        <div className="bg-white rounded-lg shadow overflow-x-auto">
+        {/* Summary Cards */}
 
-          <table className="w-full">
+        <div
+          className="
+            grid
+            md:grid-cols-4
+            gap-6
+            mb-8
+          "
+        >
+
+          <div className="bg-white p-6 rounded-xl shadow">
+
+            <div className="flex items-center gap-3">
+
+              <FaBrain className="text-indigo-600 text-3xl" />
+
+              <div>
+
+                <p className="text-gray-500">
+                  Total Predictions
+                </p>
+
+                <h2 className="text-3xl font-bold">
+                  {predictions.length}
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow">
+
+            <div className="flex items-center gap-3">
+
+              <FaExclamationTriangle className="text-red-600 text-3xl" />
+
+              <div>
+
+                <p className="text-gray-500">
+                  Fraud Detected
+                </p>
+
+                <h2 className="text-3xl font-bold text-red-600">
+                  {fraudCount}
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow">
+
+            <div className="flex items-center gap-3">
+
+              <FaShieldAlt className="text-green-600 text-3xl" />
+
+              <div>
+
+                <p className="text-gray-500">
+                  Genuine
+                </p>
+
+                <h2 className="text-3xl font-bold text-green-600">
+                  {genuineCount}
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow">
+
+            <div className="flex items-center gap-3">
+
+              <FaChartLine className="text-orange-600 text-3xl" />
+
+              <div>
+
+                <p className="text-gray-500">
+                  High Risk
+                </p>
+
+                <h2 className="text-3xl font-bold text-orange-600">
+                  {highRiskCount}
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Search */}
+
+        <div className="bg-white p-5 rounded-xl shadow mb-6">
+
+          <div className="flex items-center gap-3">
+
+            <FaSearch className="text-gray-500" />
+
+            <input
+              type="text"
+              placeholder="Search Transaction ID..."
+              value={search}
+              onChange={(e) =>
+                setSearch(
+                  e.target.value
+                )
+              }
+              className="
+                w-full
+                border
+                rounded-lg
+                p-3
+                outline-none
+              "
+            />
+
+          </div>
+
+        </div>
+
+        {/* Table */}
+
+        <div
+          className="
+            bg-white
+            rounded-xl
+            shadow-lg
+            overflow-auto
+          "
+        >
+
+          <table className="min-w-full">
 
             <thead>
 
               <tr className="bg-gray-200">
 
-                <th className="p-3 text-left">
+                <th className="p-4 text-left">
                   Prediction ID
                 </th>
 
-                <th className="p-3 text-left">
+                <th className="p-4 text-left">
                   Transaction ID
                 </th>
 
-                <th className="p-3 text-left">
+                <th className="p-4 text-left">
                   Prediction
                 </th>
 
-                <th className="p-3 text-left">
+                <th className="p-4 text-left">
                   Risk Level
                 </th>
 
-                <th className="p-3 text-left">
+                <th className="p-4 text-left">
                   Fraud Probability
                 </th>
 
-                <th className="p-3 text-left">
+                <th className="p-4 text-left">
                   Predicted At
                 </th>
 
@@ -84,93 +282,218 @@ function Predictions() {
 
             <tbody>
 
-              {predictions.length > 0 ? (
+              {
 
-                predictions.map((prediction) => (
+                filteredPredictions.length > 0
 
-                  <tr
-                    key={prediction.prediction_id}
-                    className="border-b hover:bg-gray-50"
-                  >
+                ? filteredPredictions.map(
+                    (prediction) => (
 
-                    <td className="p-3">
-                      {prediction.prediction_id}
-                    </td>
+                      <tr
+                        key={
+                          prediction.prediction_id
+                        } onClick={() => setSelectedPrediction(prediction)}
+                        className="
+                          border-b
+                          hover:bg-blue-50
+                          cursor-pointer
+                        "
+                      >
 
-                    <td className="p-3">
-                      {prediction.transaction_id}
-                    </td>
+                        <td className="p-4">
 
-                    <td className="p-3">
+                          {
+                            prediction.prediction_id
+                          }
 
-                      {prediction.prediction === "Fraud" ? (
+                        </td>
 
-                        <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold">
-                          Fraud
-                        </span>
+                        <td className="p-4 font-medium">
 
-                      ) : (
+                          {
+                            prediction.transaction_id
+                          }
 
-                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
-                          Genuine
-                        </span>
+                        </td>
 
-                      )}
+                        <td className="p-4">
 
-                    </td>
+                          {
 
-                    <td className="p-3">
+                            prediction.prediction ===
+                            "Fraud"
 
-                      {prediction.risk_level === "High" ? (
+                            ? (
 
-                        <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold">
-                          High
-                        </span>
+                              <span
+                                className="
+                                  bg-red-100
+                                  text-red-700
+                                  px-3
+                                  py-1
+                                  rounded-full
+                                  font-semibold
+                                "
+                              >
 
-                      ) : prediction.risk_level === "Medium" ? (
+                                Fraud
 
-                        <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-semibold">
-                          Medium
-                        </span>
+                              </span>
 
-                      ) : (
+                            )
 
-                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
-                          Low
-                        </span>
+                            : (
 
-                      )}
+                              <span
+                                className="
+                                  bg-green-100
+                                  text-green-700
+                                  px-3
+                                  py-1
+                                  rounded-full
+                                  font-semibold
+                                "
+                              >
 
-                    </td>
+                                Genuine
 
-                    <td className="p-3">
-                      {(prediction.fraud_probability * 100).toFixed(2)}%
-                    </td>
+                              </span>
 
-                    <td className="p-3">
-                      {new Date(
-                        prediction.predicted_at
-                      ).toLocaleString()}
+                            )
+
+                          }
+
+                        </td>
+
+                        <td className="p-4">
+
+                          {
+
+                            prediction.risk_level ===
+                            "High"
+
+                            ? (
+
+                              <span
+                                className="
+                                  bg-red-100
+                                  text-red-700
+                                  px-3
+                                  py-1
+                                  rounded-full
+                                  font-semibold
+                                "
+                              >
+
+                                High
+
+                              </span>
+
+                            )
+
+                            : prediction.risk_level ===
+                              "Medium"
+
+                            ? (
+
+                              <span
+                                className="
+                                  bg-orange-100
+                                  text-orange-700
+                                  px-3
+                                  py-1
+                                  rounded-full
+                                  font-semibold
+                                "
+                              >
+
+                                Medium
+
+                              </span>
+
+                            )
+
+                            : (
+
+                              <span
+                                className="
+                                  bg-green-100
+                                  text-green-700
+                                  px-3
+                                  py-1
+                                  rounded-full
+                                  font-semibold
+                                "
+                              >
+
+                                Low
+
+                              </span>
+
+                            )
+
+                          }
+
+                        </td>
+
+                        <td className="p-4">
+
+                          <span
+                            className="
+                              bg-blue-100
+                              text-blue-700
+                              px-3
+                              py-1
+                              rounded-full
+                              font-semibold
+                            "
+                          >
+
+                            {
+                              (
+                                prediction.fraud_probability
+                                * 100
+                              ).toFixed(2)
+                            }%
+
+                          </span>
+
+                        </td>
+
+                        <td className="p-4">
+
+                          {new Date(
+                            prediction.predicted_at
+                          ).toLocaleString()}
+
+                        </td>
+
+                      </tr>
+
+                    )
+                  )
+
+                : (
+
+                  <tr>
+
+                    <td
+                      colSpan="6"
+                      className="
+                        text-center
+                        p-10
+                      "
+                    >
+
+                      No Predictions Found
+
                     </td>
 
                   </tr>
 
-                ))
+                )
 
-              ) : (
-
-                <tr>
-
-                  <td
-                    colSpan="6"
-                    className="text-center p-6"
-                  >
-                    No predictions found
-                  </td>
-
-                </tr>
-
-              )}
+              }
 
             </tbody>
 
@@ -178,10 +501,236 @@ function Predictions() {
 
         </div>
 
+        {
+          selectedPrediction && (
+
+            <div
+              className="
+                fixed
+                inset-0
+                bg-black/50
+                flex
+                justify-center
+                items-center
+                z-50
+              "
+            >
+
+              <div
+                className="
+                  bg-white
+                  w-[650px]
+                  p-8
+                  rounded-xl
+                  shadow-xl
+                "
+              >
+
+                <div
+                  className="
+                    flex
+                    justify-between
+                    items-center
+                    mb-6
+                  "
+                >
+
+                  <h2
+                    className="
+                      text-2xl
+                      font-bold
+                    "
+                  >
+                    Prediction Details
+                  </h2>
+
+                  <button
+                    onClick={() =>
+                      setSelectedPrediction(
+                        null
+                      )
+                    }
+                  >
+                    <FaTimes />
+                  </button>
+
+                </div>
+
+                <div className="space-y-4">
+
+                  <p>
+                    <strong>
+                      Transaction ID:
+                    </strong>
+                    {" "}
+                    {
+                      selectedPrediction.transaction_id
+                    }
+                  </p>
+
+                  <p>
+                    <strong>
+                      Prediction:
+                    </strong>
+                    {" "}
+                    {
+                      selectedPrediction.prediction
+                    }
+                  </p>
+
+                  <p>
+                    <strong>
+                      Risk Level:
+                    </strong>
+                    {" "}
+                    {
+                      selectedPrediction.risk_level
+                    }
+                  </p>
+
+                  <p>
+                    <strong>
+                      Fraud Probability:
+                    </strong>
+                    {" "}
+                    {
+                      (
+                        selectedPrediction
+                          .fraud_probability
+                        * 100
+                      ).toFixed(2)
+                    }%
+                  </p>
+
+                  <p>
+                    <strong>
+                      Predicted At:
+                    </strong>
+                    {" "}
+                    {
+                      new Date(
+                        selectedPrediction
+                          .predicted_at
+                      ).toLocaleString()
+                    }
+                  </p>
+
+                </div>
+
+                <div
+                  className="
+                    mt-8
+                    bg-gray-100
+                    p-5
+                    rounded-lg
+                  "
+                >
+
+                  <h3
+                    className="
+                      text-lg
+                      font-bold
+                      mb-3
+                    "
+                  >
+                    Risk Analysis
+                  </h3>
+
+                  {
+
+                    selectedPrediction.risk_level ===
+                    "High"
+
+                    ? (
+
+                      <ul
+                        className="
+                          list-disc
+                          ml-5
+                          text-red-600
+                        "
+                      >
+
+                        <li>
+                          High Value Transaction
+                        </li>
+
+                        <li>
+                          Potential Fraud Pattern
+                        </li>
+
+                        <li>
+                          Immediate Review Required
+                        </li>
+
+                      </ul>
+
+                    )
+
+                    : selectedPrediction.risk_level ===
+                      "Medium"
+
+                    ? (
+
+                      <ul
+                        className="
+                          list-disc
+                          ml-5
+                          text-orange-600
+                        "
+                      >
+
+                        <li>
+                          Suspicious Activity
+                        </li>
+
+                        <li>
+                          Monitor User Behaviour
+                        </li>
+
+                      </ul>
+
+                    )
+
+                    : (
+
+                      <ul
+                        className="
+                          list-disc
+                          ml-5
+                          text-green-600
+                        "
+                      >
+
+                        <li>
+                          Normal Transaction
+                        </li>
+
+                        <li>
+                          No Significant Risk
+                        </li>
+
+                      </ul>
+
+                    )
+
+                  }
+
+                </div>
+
+              </div>
+
+            </div>
+
+          )
+        }
+
       </div>
 
     </div>
+
   );
+
 }
 
 export default Predictions;

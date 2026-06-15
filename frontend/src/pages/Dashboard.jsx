@@ -15,6 +15,8 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  LineChart,
+  Line
 } from "recharts";
 
 function Dashboard() {
@@ -25,33 +27,99 @@ function Dashboard() {
     fraud_rate: 0,
   });
 
+  const [riskData, setRiskData] =
+    useState([]);
+
+  const [trendData, setTrendData] =
+    useState([]);
+
+  const [advancedStats, setAdvancedStats] =
+    useState({
+      high_risk: 0,
+      medium_risk: 0,
+      email_alerts: 0,
+    });
+
+const [recentAlerts, setRecentAlerts] =
+  useState([]);
+
   useEffect(() => {
 
-    const fetchStats = async () => {
+    const fetchDashboardData =
+      async () => {
 
-      try {
+        try {
 
-        const response =
-          await api.get(
-            "/dashboard/stats"
+          const statsResponse =
+            await api.get(
+              "/dashboard/stats"
+            );
+
+          setStats(
+            statsResponse.data
           );
 
-        setStats(
-          response.data
-        );
+          const riskResponse =
+            await api.get(
+              "/dashboard/risk-distribution"
+            );
 
-      } catch (error) {
+          setRiskData([
+            {
+              risk: "Low",
+              count:
+                riskResponse.data.low,
+            },
+            {
+              risk: "Medium",
+              count:
+                riskResponse.data.medium,
+            },
+            {
+              risk: "High",
+              count:
+                riskResponse.data.high,
+            },
+          ]);
 
-        console.error(
-          "Error fetching dashboard stats:",
-          error
-        );
+          const trendResponse =
+            await api.get(
+              "/dashboard/fraud-trends"
+            );
 
-      }
+          setTrendData(
+            trendResponse.data
+          );
 
-    };
+          const advancedResponse =
+            await api.get(
+              "/dashboard/advanced-stats"
+            );
 
-    fetchStats();
+          setAdvancedStats(
+            advancedResponse.data
+          );
+
+          const alertsResponse =
+            await api.get(
+              "/dashboard/recent-alerts"
+            );
+
+          setRecentAlerts(
+            alertsResponse.data
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Dashboard Error:",
+            error
+          );
+
+        }
+      };
+
+    fetchDashboardData();
 
   }, []);
 
@@ -82,11 +150,12 @@ function Dashboard() {
   ];
 
   return (
-    <div className="flex">
+
+    <div className="bg-gray-100 min-h-screen">
 
       <Sidebar />
 
-      <div className="flex-1 p-8 bg-gray-100 min-h-screen">
+      <div className="ml-64 p-8">
 
         <h1 className="text-4xl font-bold mb-8">
           Credit Card Fraud Detection Dashboard
@@ -94,11 +163,13 @@ function Dashboard() {
 
         {/* Stats Cards */}
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 xl:grid-cols-6 gap-6">
 
           <StatCard
             title="Total Transactions"
-            value={stats.total_transactions.toLocaleString()}
+            value={
+              stats.total_transactions.toLocaleString()
+            }
           />
 
           <StatCard
@@ -111,9 +182,30 @@ function Dashboard() {
             value={stats.fraud_rate}
           />
 
+          <StatCard
+            title="High Risk"
+            value={
+              advancedStats.high_risk
+            }
+          />
+
+          <StatCard
+            title="Medium Risk"
+            value={
+              advancedStats.medium_risk
+            }
+          />
+
+          <StatCard
+            title="Email Alerts"
+            value={
+              advancedStats.email_alerts
+            }
+          />
+
         </div>
 
-        {/* Charts Section */}
+        {/* Row 1 */}
 
         <div className="grid lg:grid-cols-2 gap-6 mt-10">
 
@@ -200,9 +292,178 @@ function Dashboard() {
 
         </div>
 
+        {/* Row 2 */}
+
+        <div className="mt-8">
+
+          <div className="bg-white p-6 rounded-lg shadow">
+
+            <h2 className="text-2xl font-bold mb-4">
+              Risk Level Distribution
+            </h2>
+
+            <ResponsiveContainer
+              width="100%"
+              height={350}
+            >
+
+              <BarChart
+                data={riskData}
+              >
+
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                />
+
+                <XAxis
+                  dataKey="risk"
+                />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Legend />
+
+                <Bar
+                  dataKey="count"
+                  fill="#f97316"
+                />
+
+              </BarChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
+        </div>
+
+        {/* Row 3 */}
+
+        <div className="mt-8">
+
+          <div className="bg-white p-6 rounded-lg shadow">
+
+            <h2 className="text-2xl font-bold mb-4">
+              Daily Fraud Trend
+            </h2>
+
+            <ResponsiveContainer
+              width="100%"
+              height={350}
+            >
+
+              <LineChart
+                data={trendData}
+              >
+
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                />
+
+                <XAxis
+                  dataKey="date"
+                />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Legend />
+
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke="#ef4444"
+                  strokeWidth={3}
+                />
+
+              </LineChart>
+
+            </ResponsiveContainer>
+
+            
+
+          </div>
+
+        </div>
+
+        <div className="mt-8">
+
+          <div className="bg-white p-6 rounded-lg shadow">
+
+            <h2 className="text-2xl font-bold mb-4">
+              Recent Fraud Alerts
+            </h2>
+
+            {recentAlerts.length > 0 ? (
+
+              <div className="space-y-4">
+
+                {recentAlerts.map(
+                  (alert, index) => (
+
+                    <div
+                      key={index}
+                      className="
+                        border
+                        rounded-lg
+                        p-4
+                        flex
+                        justify-between
+                        items-center
+                      "
+                    >
+
+                      <div>
+
+                        <div className="font-semibold">
+                          {alert.transaction_id}
+                        </div>
+
+                        <div className="text-gray-500 text-sm">
+                          {new Date(
+                            alert.predicted_at
+                          ).toLocaleString()}
+                        </div>
+
+                      </div>
+
+                      <span
+                        className="
+                          bg-red-100
+                          text-red-700
+                          px-3
+                          py-1
+                          rounded-full
+                          font-semibold
+                        "
+                      >
+                        {alert.risk_level}
+                      </span>
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+            ) : (
+
+              <div className="text-gray-500">
+                No fraud alerts available
+              </div>
+
+            )}
+
+          </div>
+
+        </div>
       </div>
 
     </div>
+
   );
 }
 

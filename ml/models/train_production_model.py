@@ -12,7 +12,12 @@ from sklearn.preprocessing import (
 from sklearn.ensemble import RandomForestClassifier
 
 from sklearn.metrics import (
-    classification_report
+    classification_report,
+    confusion_matrix,
+    roc_auc_score,
+    precision_score,
+    recall_score,
+    f1_score
 )
 
 from imblearn.over_sampling import SMOTE
@@ -22,7 +27,7 @@ from imblearn.over_sampling import SMOTE
 # ----------------------------------
 
 df = pd.read_csv(
-    "data/processed/featured_creditcard.csv"
+    "data/processed/business_fraud_dataset.csv"
 )
 
 print("=" * 50)
@@ -33,7 +38,7 @@ print("=" * 50)
 # Target
 # ----------------------------------
 
-y = df["Class"]
+y = df["BusinessClass"]
 
 # ----------------------------------
 # Production Features Only
@@ -161,6 +166,16 @@ y_pred = model.predict(
     X_test_processed
 )
 
+y_prob = model.predict_proba(
+    X_test_processed
+)[:, 1]
+
+print("\n" + "=" * 50)
+print("MODEL EVALUATION")
+print("=" * 50)
+
+print("\nClassification Report")
+
 print(
     classification_report(
         y_test,
@@ -168,6 +183,50 @@ print(
     )
 )
 
+print("\nConfusion Matrix")
+
+print(
+    confusion_matrix(
+        y_test,
+        y_pred
+    )
+)
+
+print("\nPrecision")
+
+print(
+    precision_score(
+        y_test,
+        y_pred
+    )
+)
+
+print("\nRecall")
+
+print(
+    recall_score(
+        y_test,
+        y_pred
+    )
+)
+
+print("\nF1 Score")
+
+print(
+    f1_score(
+        y_test,
+        y_pred
+    )
+)
+
+print("\nROC-AUC")
+
+print(
+    roc_auc_score(
+        y_test,
+        y_prob
+    )
+)
 # ----------------------------------
 # Save
 # ----------------------------------
@@ -179,12 +238,12 @@ os.makedirs(
 
 joblib.dump(
     model,
-    "artifacts/production_random_forest.pkl"
+    "artifacts/business_random_forest.pkl"
 )
 
 joblib.dump(
     preprocessor,
-    "artifacts/production_preprocessor.pkl"
+    "artifacts/business_preprocessor.pkl"
 )
 
 print(

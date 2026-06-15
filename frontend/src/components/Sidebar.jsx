@@ -1,4 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
+import {
+  FaChartLine,
+  FaCreditCard,
+  FaBell,
+  FaBrain,
+  FaUpload,
+  FaSignOutAlt,
+  FaShieldAlt
+} from "react-icons/fa";
+
+import {
+  NavLink,
+  useNavigate
+} from "react-router-dom";
 
 function Sidebar() {
 
@@ -11,58 +24,82 @@ function Sidebar() {
     navigate("/");
   };
 
+  const menuClass = ({ isActive }) =>
+    `flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+      isActive
+        ? "bg-blue-600 text-white"
+        : "hover:bg-gray-800"
+    }`;
+
   return (
-    <div className="w-64 min-h-screen bg-gray-900 text-white p-6">
 
-      <h1 className="text-2xl font-bold mb-10">
-        Fraud Admin
-      </h1>
+    <div className="fixed left-0 top-0 w-64 h-screen bg-gray-900 text-white shadow-xl">
 
-      <nav className="flex flex-col gap-4">
+      <div className="p-6">
 
-        <Link
-          to="/dashboard"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          📊 Dashboard
-        </Link>
+        <div className="flex items-center gap-3 mb-10">
 
-        <Link
-          to="/transactions"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          💳 Transactions
-        </Link>
+          <FaShieldAlt size={30} />
 
-        <Link
-          to="/alerts"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          🚨 Alerts
-        </Link>
+          <h1 className="text-2xl font-bold">
+            Fraud Admin
+          </h1>
 
-        <Link
-          to="/predictions"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          🤖 Predictions
-        </Link>
+        </div>
 
-        <Link
-            to="/simulator"
-            className="flex items-center gap-3"
-            >
-            🧠 Simulator
-            </Link>
+        <nav className="flex flex-col gap-3">
 
-        <button
-          onClick={handleLogout}
-          className="text-left hover:bg-red-700 p-3 rounded mt-8"
-        >
-          🚪 Logout
-        </button>
+          <NavLink
+            to="/dashboard"
+            className={menuClass}
+          >
+            <FaChartLine />
+            Dashboard
+          </NavLink>
 
-      </nav>
+          <NavLink
+            to="/upload"
+            className={menuClass}
+          >
+            <FaUpload />
+            Upload Transactions
+          </NavLink>
+
+          <NavLink
+            to="/transactions"
+            className={menuClass}
+          >
+            <FaCreditCard />
+            Transactions
+          </NavLink>
+
+          <NavLink
+            to="/alerts"
+            className={menuClass}
+          >
+            <FaBell />
+            Alerts
+          </NavLink>
+
+          <NavLink
+            to="/predictions"
+            className={menuClass}
+          >
+            <FaBrain />
+            Predictions
+          </NavLink>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 mt-10 p-3 rounded-lg hover:bg-red-600 transition-all"
+          >
+            <FaSignOutAlt />
+            Logout
+          </button>
+
+        </nav>
+
+      </div>
 
     </div>
   );

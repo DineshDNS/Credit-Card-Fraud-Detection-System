@@ -65,23 +65,20 @@ function Transactions() {
   }, [filter, page, search]);
 
   return (
-    <div className="flex">
+
+    <div className="bg-gray-100 min-h-screen">
 
       <Sidebar />
 
-      <div className="flex-1 p-8 bg-gray-100 min-h-screen">
+      <div className="ml-64 p-8">
 
         <h1 className="text-4xl font-bold mb-6">
           Transactions
         </h1>
 
-        {/* Summary */}
-
         <div className="mb-4 font-semibold">
           Total Records: {totalRecords}
         </div>
-
-        {/* Search + Filter */}
 
         <div className="flex flex-wrap gap-4 mb-6">
 
@@ -144,11 +141,9 @@ function Transactions() {
 
         </div>
 
-        {/* Transactions Table */}
+        <div className="bg-white rounded-lg shadow overflow-auto">
 
-        <div className="bg-white rounded-lg shadow overflow-x-auto">
-
-          <table className="w-full">
+          <table className="min-w-full">
 
             <thead>
 
@@ -190,7 +185,10 @@ function Transactions() {
 
                   <tr
                     key={txn.transaction_id}
-                    className="border-b hover:bg-gray-50"
+                    className="
+                      border-b
+                      hover:bg-gray-50
+                    "
                   >
 
                     <td className="p-3">
@@ -217,21 +215,40 @@ function Transactions() {
 
                     <td className="p-3">
 
-                      {txn.actual_class === 1 ? (
+                      {txn.prediction === "Fraud" ? (
 
-                        <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold">
+                        <span
+                          className="
+                            bg-red-100
+                            text-red-700
+                            px-3
+                            py-1
+                            rounded-full
+                            font-semibold
+                          "
+                        >
                           Fraud
                         </span>
 
                       ) : (
 
-                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
+                        <span
+                          className="
+                            bg-green-100
+                            text-green-700
+                            px-3
+                            py-1
+                            rounded-full
+                            font-semibold
+                          "
+                        >
                           Genuine
                         </span>
 
                       )}
 
                     </td>
+
 
                   </tr>
 
@@ -243,7 +260,10 @@ function Transactions() {
 
                   <td
                     colSpan="6"
-                    className="text-center p-6"
+                    className="
+                      text-center
+                      p-6
+                    "
                   >
                     No transactions found
                   </td>
@@ -258,9 +278,15 @@ function Transactions() {
 
         </div>
 
-        {/* Pagination */}
-
-        <div className="flex justify-center items-center gap-4 mt-6">
+        <div
+          className="
+            flex
+            justify-center
+            items-center
+            gap-4
+            mt-6
+          "
+        >
 
           <button
             disabled={page === 1}
@@ -307,7 +333,9 @@ function Transactions() {
       </div>
 
     </div>
+
   );
+
 }
 
 export default Transactions;

@@ -8,11 +8,7 @@ def create_alert(
     prediction
 ):
 
-    if (
-        prediction != "Fraud"
-        and
-        risk_level != "High"
-    ):
+    if prediction != "Fraud":
         return
 
     existing = (
@@ -27,13 +23,42 @@ def create_alert(
     if existing:
         return
 
+    # Alert Message
+
+    if risk_level == "High":
+
+        message = (
+            "High Value Transaction Detected"
+        )
+
+    elif risk_level == "Medium":
+
+        message = (
+            "Suspicious Activity Detected"
+        )
+
+    else:
+
+        message = (
+            "Unusual Transaction Pattern"
+        )
+
     alert = Alert(
 
-        transaction_id=transaction_id,
+        transaction_id=
+            transaction_id,
 
-        alert_type="Fraud",
+        alert_type=
+            prediction,
 
-        alert_status="Pending"
+        risk_level=
+            risk_level,
+
+        message=
+            message,
+
+        alert_status=
+            "Pending"
     )
 
     db.add(alert)

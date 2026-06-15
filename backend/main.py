@@ -5,7 +5,9 @@ from app.routes.transactions import (router as transaction_router)
 from app.routes.dashboard import (
     router as dashboard_router
 )
+from app.routes import upload
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import upload_history
 
 app = FastAPI(
     title="Credit Card Fraud Detection API",
@@ -40,6 +42,14 @@ app.include_router(
     dashboard_router
 )
 
+app.include_router(
+    upload.router
+)
+
+app.include_router(
+    upload_history.router
+)
+
 from app.routes.predictions import (
     router as prediction_router
 )
@@ -69,3 +79,4 @@ def home():
         "message":
         "Fraud Detection API Running"
     }
+

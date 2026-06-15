@@ -2,10 +2,11 @@ import { Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Upload from "./pages/Upload";
 import Transactions from "./pages/Transactions";
 import Alerts from "./pages/Alerts";
 import Predictions from "./pages/Predictions";
-import Simulator from "./pages/Simulator";
+
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -26,6 +27,15 @@ function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/upload"
+        element={
+          <ProtectedRoute>
+            <Upload />
           </ProtectedRoute>
         }
       />
@@ -55,11 +65,6 @@ function App() {
             <Predictions />
           </ProtectedRoute>
         }
-      />
-
-      <Route
-        path="/simulator"
-        element={<Simulator />}
       />
 
     </Routes>
